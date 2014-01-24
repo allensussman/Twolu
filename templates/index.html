@@ -56,11 +56,13 @@
             <p> Find movies for two!</p>
             <br>        
             <form action="." method="POST">
-                <label>Friend 1: What movie do you want to watch?</label>
-                <input type="text" name="movie1" value="{{first_movie}}">
+                <label>Friend 1: What movies do you want to watch?</label>
+                <input type="text" name="u1m1_name" value="{{u1m1_val}}">
+                <input type="text" name="u1m2_name" value="{{u1m2_val}}">
                 <br>
-                <label>Friend 2: What movie do you want to watch?</label>
-                <input type="text" name="movie2" value="{{second_movie}}">
+                <label>Friend 2: What movies do you want to watch?</label>
+                <input type="text" name="u2m1_name" value="{{u2m1_val}}">
+                <input type="text" name="u2m2_name" value="{{u2m2_val}}">
                 <br>
                 <br>
                 <input type="submit" name="my-form" value="Find movies we'll both enjoy">
