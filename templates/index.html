@@ -16,6 +16,11 @@
     <!-- Custom styles for this template -->
     <link href="static/dist/css/starter-template.css" rel="stylesheet">
 
+    <!-- You need to download and include following files-->
+
+    <link href="static/dist/css/typeahead.css" rel="stylesheet">
+    <script src="static/dist/js/jquery.min.js"></script>
+    <script src="static/dist/js/typeahead.js"></script>
     <!-- Just for debugging purposes. Don't actually copy this line! -->
     <!--[if lt IE 9]><script src="../../docs-assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
 
@@ -56,25 +61,41 @@
             <p> Find movies for two!</p>
             <br>        
             <form action="." method="POST">
-                <label>Friend 1: What movies do you want to watch?</label>
-                <input type="text" name="u1m1_name" value="{{u1m1_val}}">
-                <input type="text" name="u1m2_name" value="{{u1m2_val}}">
-                <input type="text" name="u1m3_name" value="{{u1m3_val}}">
-                <input type="text" name="u1m4_name" value="{{u1m4_val}}">
-                <input type="text" name="u1m5_name" value="{{u1m5_val}}">
                 <br>
-                <label>Friend 2: What movies do you want to watch?</label>
-                <input type="text" name="u2m1_name" value="{{u2m1_val}}">
-                <input type="text" name="u2m2_name" value="{{u2m2_val}}">
-                <input type="text" name="u2m3_name" value="{{u2m3_val}}">
-                <input type="text" name="u2m4_name" value="{{u2m4_val}}">
-                <input type="text" name="u2m5_name" value="{{u2m5_val}}">
+                <div class='example-countries'>
+                    <span class="twitter-typeahead" style="position: relative; display: inline-block; ">
+                    <p id="autocomplete-textboxes"></p>
+                    </span>
+                </div>
                 <br>
                 <br>
                 <input type="submit" name="my-form" value="Find movies we'll both enjoy">
                 <br>
                 <br>
                 <p>{{message}}</p>
+
+
+
+                    <script>
+                        $('#autocomplete-textboxes').html(autocompletetextboxTags)
+
+                        function autocompletetextboxTags(){
+                            html=''
+                            for(var i=1;i<=2;i++) {
+                                html+='<label>Friend '+i+': What movies do you want to watch?</label>'
+                                for(var j=1;j<=5;j++) {
+                                    html+='<input class="typeahead tt-query" type="text" placeholder="Enter a movie title" autocomplete="on" spellcheck="false" style="position: relative; vertical-align: top; background-color: transparent; " dir="auto" name="u'+i+'m'+j+'_name" id="title">\n<br>'
+                            }
+                            }
+                            return $(html)
+                        }
+
+                        $('.example-countries .typeahead').typeahead({
+                          name: 'movieTitles',
+                          prefetch: 'static/movieTitles.json',
+                          limit: 10
+                        });
+                    </script>
             </form>
         </div>
     </div><!-- /.container -->

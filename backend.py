@@ -44,7 +44,7 @@ def getMovieID(moviesDf,movieTitle):
 	(case doesn't matter nor whether article is at beginning) (finds first movie)
 	"""
 	movie_lower=movieTitle.lower()
-	movie_info=moviesDf[(moviesDf['TitleLower']==movie_lower) | (moviesDf['TitleNoArticleLower']==movie_lower) ]
+	movie_info=moviesDf[(moviesDf['TitleLower']==movie_lower) | (moviesDf['TitleNoArticleLower']==movie_lower) | (moviesDf['TitleWithYear']==movieTitle)]
 	if movie_info.empty:
 		print '%s not found' % movieTitle
 	return movie_info.index[0]
