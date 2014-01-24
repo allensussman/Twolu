@@ -1,3 +1,6 @@
+	# from code import interact; interact(local=locals())
+
+
 from recsys.algorithm.factorize import SVD
 import numpy as np
 import pandas as pd
@@ -36,11 +39,17 @@ def removeArticle(x):
 def lowerCase(x):
     return x.lower()
 
-def recommendations(movie_1,movie_2):
-	#make lowercase versions
-	first_movie_lower=movie_1.lower()
-	second_movie_lower=movie_2.lower()
+def getMovieID(moviesDf,movieTitle):
+	"""(case doesn't matter nor whether article is at beginning) (finds first movie)
+	"""
+	movie_lower=movieTitle.lower()
+	movie_info=moviesDf[(moviesDf['TitleLower']==movie_lower) | (moviesDf['TitleNoArticleLower']==movie_lower) ]
+	if movie_info.empty:
+		print '%s not found' % movieTitle
+	return movie_info.index[0]
 
+
+def recommendations(movies_1,movies_2):
 	# Create a connection and a cursor object
 	db = DbAccess('twolu',usr='root')
 
@@ -71,15 +80,8 @@ def recommendations(movie_1,movie_2):
 	moviesDf['TitleNoArticleLower']=moviesDf['TitleNoArticle'].apply(lowerCase)
 
 	#-----------------------------------------FIND MOVIEIDS OF INPUT MOVIES------------------------------------------------------------#
-	#(case doesn't matter nor whether article is at beginning) (finds first movie)  return -1 or -2 if input movies not found
-	first_movie_info=moviesDf[(moviesDf['TitleLower']==first_movie_lower) | (moviesDf['TitleNoArticleLower']==first_movie_lower) ]
-	if first_movie_info.empty:
-		return -1
-	ITEMIDS1=[first_movie_info.index[0]]
-	second_movie_info=moviesDf[(moviesDf['TitleLower']==second_movie_lower) | (moviesDf['TitleNoArticleLower']==second_movie_lower) ]
-	if second_movie_info.empty:
-		return -2
-	ITEMIDS2=[second_movie_info.index[0]]
+	ITEMIDS1=[getMovieID(moviesDf,movie) for movie in movies_1]
+	ITEMIDS2=[getMovieID(moviesDf,movie) for movie in movies_2]
 
 	#-----------------------------------------READ IN SVD AND GET SIMILARITIES-----------------------------------------------------------#	
 	#Import SVD from file
@@ -112,6 +114,8 @@ def recommendations(movie_1,movie_2):
 	var_sims=sum([abs(i-avg_sims) for i in sims_to_inputs])/numInputs
 
 	recs_tuples=(avg_sims-0.25*var_sims-0.25*diff_sims).top_items(5,lambda x: ITEMIDS.count(x)==0)
+
+	#------------------------------------------------CONVERT TO TITLES--------------------------------------------------------------#
 	recsIDs=[i[0] for i in recs_tuples]
 
 	return moviesDf.Title.loc[recsIDs].tolist()
@@ -123,10 +127,10 @@ def main():
 	# ITEMIDS2=[1240,589,1200] #Terminator,T2,Aliens
 	# ITEMIDS1=[1]
 	# ITEMIDS2=[1240]
-	movie_1='Toy Story'
-	movie_2='Terminator'
+	movies_1=['Toy Story','Aladdin']
+	movies_2=['Terminator','Aliens']
 
-	print recommendations(movie_1,movie_2)
+	print recommendations(movies_1,movies_2)
 
 if __name__ == '__main__':
 	main()
