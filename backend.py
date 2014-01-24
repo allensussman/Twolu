@@ -36,10 +36,15 @@ def removeArticle(x):
 def lowerCase(x):
     return x.lower()
 
+def recommendations(movie_1,movie_2):
+	#make lowercase versions
+	first_movie_lower=movie_1.lower()
+	second_movie_lower=movie_2.lower()
 
-def makeMoviesTable(db):
-	"""return the movieIDs and titles in db.movies as a dataframe with index movieID and columns which are the title in various formats
-	"""
+	# Create a connection and a cursor object
+	db = DbAccess('twolu',usr='root')
+
+	#-------------------------------------------------GET DATA FROM SQL------------------------------------------------------#
 	# get movies
 	db.cursor.execute(
 	    '''
@@ -65,76 +70,52 @@ def makeMoviesTable(db):
 	moviesDf['TitleLower']=moviesDf['Title'].apply(lowerCase)
 	moviesDf['TitleNoArticleLower']=moviesDf['TitleNoArticle'].apply(lowerCase)
 
-	return moviesDf
+	#-----------------------------------------FIND MOVIEIDS OF INPUT MOVIES------------------------------------------------------------#
+	#(case doesn't matter nor whether article is at beginning) (finds first movie)  return -1 or -2 if input movies not found
+	first_movie_info=moviesDf[(moviesDf['TitleLower']==first_movie_lower) | (moviesDf['TitleNoArticleLower']==first_movie_lower) ]
+	if first_movie_info.empty:
+		return -1
+	ITEMIDS1=[first_movie_info.index[0]]
+	second_movie_info=moviesDf[(moviesDf['TitleLower']==second_movie_lower) | (moviesDf['TitleNoArticleLower']==second_movie_lower) ]
+	if second_movie_info.empty:
+		return -2
+	ITEMIDS2=[second_movie_info.index[0]]
 
-
-def getMovieInfo(movieDf,movie_title):
-	"""get info of movie_title in movieDf
-	"""
-	movie_lower=movie_title.lower()
-	movie_info=moviesDf[(moviesDf['TitleLower']==movie_lower) | (moviesDf['TitleNoArticleLower']==movie_lower) ]
-	if movie_info.empty:
-		print '%s not found' % movie_title
-
-def recommendations(movie_1,movie_2):
-	#make lowercase versions
-	first_movie_lower=movie_1.lower()
-	second_movie_lower=movie_2.lower()
-
-	# Create a connection and a cursor object
-	db = DbAccess('twolu100K',usr='root')
-
-	moviesDf=getMoviesTable(db)
-
-	ITEMIDS1=
-
-	# #-----------------------------------------FIND MOVIEIDS OF INPUT MOVIES------------------------------------------------------------#
-	# #(case doesn't matter nor whether article is at beginning) (finds first movie)  return -1 or -2 if input movies not found
-	# first_movie_info=moviesDf[(moviesDf['TitleLower']==first_movie_lower) | (moviesDf['TitleNoArticleLower']==first_movie_lower) ]
-	# if first_movie_info.empty:
-	# 	return -1
-	# ITEMIDS1=[first_movie_info.index[0]]
-	# second_movie_info=moviesDf[(moviesDf['TitleLower']==second_movie_lower) | (moviesDf['TitleNoArticleLower']==second_movie_lower) ]
-	# if second_movie_info.empty:
-	# 	return -2
-	# ITEMIDS2=[second_movie_info.index[0]]
-
+	#-----------------------------------------READ IN SVD AND GET SIMILARITIES-----------------------------------------------------------#	
 	#Import SVD from file
 	svd2=SVD()
 	svd2.load_model('svd-10M-k100') #calculated on 10M rating database, with parameter k=100
 
 	sims=svd2.get_matrix_similarity()
 
+	#------------------------------------------------GET RECOMMENDED MOVIEIDS--------------------------------------------------------------#
 	numInput1s=len(ITEMIDS1)
 	numInput2s=len(ITEMIDS2)
 
 	ITEMIDS=ITEMIDS1+ITEMIDS2
 
 	numInputs=len(ITEMIDS)
-	# print numInputs
 
 	sims_to_inputs_1=[sims.get_row(i) for i in ITEMIDS1]
 	sims_to_inputs_2=[sims.get_row(i) for i in ITEMIDS2]
 
 	sims_to_inputs=[sims.get_row(i) for i in ITEMIDS]
-	# print sims_to_inputs
 
 	avg_sims_1=sum(sims_to_inputs_1)/numInput1s
 	avg_sims_2=sum(sims_to_inputs_2)/numInput2s
 
 
 	avg_sims=sum(sims_to_inputs)/numInputs
-	# print avg_sims
 
 	diff_sims=abs(avg_sims_1-avg_sims_2)/2
-	print diff_sims
 
 	var_sims=sum([abs(i-avg_sims) for i in sims_to_inputs])/numInputs
-	# print var_sims
-
 
 	recs_tuples=(avg_sims-0.25*var_sims-0.25*diff_sims).top_items(5,lambda x: ITEMIDS.count(x)==0)
-	return [i[0] for i in recs_tuples]
+	recsIDs=[i[0] for i in recs_tuples]
+
+	return moviesDf.Title.loc[recsIDs].tolist()
+
 
 def main():
 
@@ -145,8 +126,7 @@ def main():
 	movie_1='Toy Story'
 	movie_2='Terminator'
 
-
-	return recommendations(movie_1,movie_2)
+	print recommendations(movie_1,movie_2)
 
 if __name__ == '__main__':
 	main()
