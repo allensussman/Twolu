@@ -40,7 +40,8 @@ def lowerCase(x):
     return x.lower()
 
 def getMovieID(moviesDf,movieTitle):
-	"""(case doesn't matter nor whether article is at beginning) (finds first movie)
+	""" Returns movieID of movieTitle in the dataframe moviesDf
+	(case doesn't matter nor whether article is at beginning) (finds first movie)
 	"""
 	movie_lower=movieTitle.lower()
 	movie_info=moviesDf[(moviesDf['TitleLower']==movie_lower) | (moviesDf['TitleNoArticleLower']==movie_lower) ]
@@ -50,6 +51,11 @@ def getMovieID(moviesDf,movieTitle):
 
 
 def recommendations(movies_1,movies_2):
+	""" Returns recommended movies for two people
+	movies_1: list (!) of movies person 1 wants to watch
+	movies_2: list (!) of movies person 2 wants to watch
+	"""
+
 	# Create a connection and a cursor object
 	db = DbAccess('twolu',usr='root')
 
@@ -80,6 +86,8 @@ def recommendations(movies_1,movies_2):
 	moviesDf['TitleNoArticleLower']=moviesDf['TitleNoArticle'].apply(lowerCase)
 
 	#-----------------------------------------FIND MOVIEIDS OF INPUT MOVIES------------------------------------------------------------#
+
+	# TO DO: Fix handling of not finding a movie
 	ITEMIDS1=[getMovieID(moviesDf,movie) for movie in movies_1]
 	ITEMIDS2=[getMovieID(moviesDf,movie) for movie in movies_2]
 
