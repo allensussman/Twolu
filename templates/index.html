@@ -62,7 +62,7 @@
             <br>        
             <form action="." method="POST">
                 <p id="autocomplete-textboxes"></p>
-
+                <img src="{{poster_url_1}}" alt="some_text">
                 <input type="submit" name="my-form" value="Find movies we'll both enjoy">
                 <br>
                 <br>
@@ -73,12 +73,18 @@
 
                         function autocompletetextboxTags(){
                             html=''
-                            for(var i=1;i<=2;i++) {
-                                html+='<label>Friend '+i+': What movies do you want to watch?</label>'
-                                for(var j=1;j<=5;j++) {
-                                    html+='<input class="movie" type="text" name="u'+i+'m'+j+'_name" id="movie'+i+j+'" placeholder="Enter a movie title">'
-                                }
-                            }
+                            html+='<label>Friend 1: What movies do you want to watch?</label>'
+                            html+='<input class="movie" type="text" name="u1m1_name" id="movie11" placeholder="Enter a movie title" value="{{u1m1_val}}">'
+                            html+='<input class="movie" type="text" name="u1m2_name" id="movie12" placeholder="Enter a movie title" value="{{u1m2_val}}">'
+                            html+='<input class="movie" type="text" name="u1m3_name" id="movie13" placeholder="Enter a movie title" value="{{u1m3_val}}">'
+                            html+='<input class="movie" type="text" name="u1m4_name" id="movie14" placeholder="Enter a movie title" value="{{u1m4_val}}">'
+                            html+='<input class="movie" type="text" name="u1m5_name" id="movie15" placeholder="Enter a movie title" value="{{u1m5_val}}">'
+                            html+='<label>Friend 2: What movies do you want to watch?</label>'
+                            html+='<input class="movie" type="text" name="u2m1_name" id="movie21" placeholder="Enter a movie title" value="{{u2m1_val}}">'
+                            html+='<input class="movie" type="text" name="u2m2_name" id="movie22" placeholder="Enter a movie title" value="{{u2m2_val}}">'
+                            html+='<input class="movie" type="text" name="u2m3_name" id="movie23" placeholder="Enter a movie title" value="{{u2m3_val}}">'
+                            html+='<input class="movie" type="text" name="u2m4_name" id="movie24" placeholder="Enter a movie title" value="{{u2m4_val}}">'
+                            html+='<input class="movie" type="text" name="u2m5_name" id="movie24" placeholder="Enter a movie title" value="{{u2m5_val}}">'
                             return $(html)
                         }
 

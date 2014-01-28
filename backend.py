@@ -5,6 +5,7 @@ from recsys.algorithm.factorize import SVD
 import numpy as np
 import pandas as pd
 from DbAccess import DbAccess
+from rottentomatoes import RT
 
 #move article in movie title from end to beginning
 def moveArticle(x):
@@ -49,8 +50,11 @@ def getMovieID(moviesDf,movieTitle):
 		print '%s not found' % movieTitle
 	return movie_info.index[0]
 
+def getPosterUrl(movieTitle):
+	rt=RT()
+	return rt.search(movieTitle)[0]['posters']['original']
 
-def recommendations(movies_1,movies_2):
+def backend(movies_1,movies_2):
 	""" Returns recommended movies for two people
 	movies_1: list (!) of movies person 1 wants to watch
 	movies_2: list (!) of movies person 2 wants to watch
@@ -123,11 +127,15 @@ def recommendations(movies_1,movies_2):
 
 	recs_tuples=(avg_sims-0.25*var_sims-0.25*diff_sims).top_items(5,lambda x: ITEMIDS.count(x)==0)
 
-	#------------------------------------------------CONVERT TO TITLES--------------------------------------------------------------#
 	recsIDs=[i[0] for i in recs_tuples]
+	#------------------------------------------------CONVERT TO TITLES--------------------------------------------------------------#
+	recTitles=moviesDf.Title.loc[recsIDs].tolist()
 
-	return moviesDf.Title.loc[recsIDs].tolist()
+	#------------------------------------------------GET POSTER URLS--------------------------------------------------------------#
+	posterUrls=[getPosterUrl(title) for title in recTitles]
 
+	#------------------------------------------------RETURN--------------------------------------------------------------#
+	return zip(recTitles,posterUrls)
 
 def main():
 
@@ -138,7 +146,7 @@ def main():
 	movies_1=['Toy Story','Aladdin']
 	movies_2=['Terminator','Aliens']
 
-	print recommendations(movies_1,movies_2)
+	print backend(movies_1,movies_2)
 
 if __name__ == '__main__':
 	main()
