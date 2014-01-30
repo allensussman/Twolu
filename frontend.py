@@ -63,10 +63,12 @@ def my_form_post():
     recs_tuples = backend(u1movies,u2movies)
     [recTitles,recPosterUrls]=zip(*recs_tuples)
     message="Your ranked recommendations: %s, %s, %s, %s, %s" % tuple(recTitles)
-    return render_template("index.html",message=message,
+    return render_template("results.html",message=message,
         u1m1_val=u1m1,u1m2_val=u1m2,u1m3_val=u1m3,u1m4_val=u1m4,u1m5_val=u1m5,
         u2m1_val=u2m1,u2m2_val=u2m2,u2m3_val=u2m3,u2m4_val=u2m4,u2m5_val=u2m5,
-        poster_url_1=recPosterUrls[0])
+        poster_url_1=recPosterUrls[0],poster_url_2=recPosterUrls[1],
+        poster_url_3=recPosterUrls[2],poster_url_4=recPosterUrls[3],
+        poster_url_5=recPosterUrls[4])
 
 # `movies` function is called here
 @app.route("/json/<what>")
@@ -75,4 +77,4 @@ def ajson(what):
     return JSON[what]()
 
 if __name__ == '__main__':
-    app.run()
+    app.run("0.0.0.0",port=5000)

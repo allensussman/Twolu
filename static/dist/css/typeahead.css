@@ -15,7 +15,7 @@ html {
 }
 
 .container {
-  max-width: 700px;
+  max-width: 3000px;
   margin: 0 auto;
   text-align: center;
 }
@@ -70,7 +70,7 @@ p {
 .typeahead,
 .tt-query,
 .tt-hint {
-  width: 496px;
+  width: 380px;
   height: 30px;
   padding: 8px 12px;
   font-size: 16px;

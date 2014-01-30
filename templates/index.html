@@ -6,24 +6,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="shortcut icon" href="../../docs-assets/ico/favicon.png">
+    <link rel="shortcut icon" href="static/assets/ico/favicon.png">
 
-    <title>Twolu - Movies For Two!</title>
+    <title>Twolu - Movies for two!</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="static/dist/css/bootstrap.css" rel="stylesheet">
+    <link href="static/assets/css/bootstrap.css" rel="stylesheet">
+    <link href="static/assets/css/font-awesome.min.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="static/dist/css/starter-template.css" rel="stylesheet">
-
-    <!-- You need to download and include following files-->
+    <link href="static/assets/css/main.css" rel="stylesheet">
 
     <link href="static/dist/css/typeahead.css" rel="stylesheet">
+
+
     <script src="static/dist/js/jquery.min.js"></script>
     <script src="static/dist/js/typeahead.js"></script>
-    <!-- Just for debugging purposes. Don't actually copy this line! -->
-    <!--[if lt IE 9]><script src="../../docs-assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
-
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -33,58 +31,63 @@
 
   <body>
 
-    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <!-- Fixed navbar -->
+    <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Twolu</a>
+          <a class="navbar-brand" href="#"><img src="static/dist/img/logo.png" alt="" height="35"></a>
         </div>
-        <div class="collapse navbar-collapse">
-          <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#contact">Contact</a></li>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="active"><a href="index.html">HOME</a></li>
+            <li><a href="about.html">ABOUT</a></li>
+            <li><a href="services.html">SERVICES</a></li>
+            <li><a href="works.html">WORKS</a></li>
+            <li><a data-toggle="modal" data-target="#myModal" href="#myModal"><i class="fa fa-envelope-o"></i></a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
     </div>
 
-    <div class="container">
-        <div class="starter-template">
-
-            <h1 align="center">Twolu</h1>
-            <p> Find movies for two!</p>
-            <br>        
+	<div id="headerwrap">
+		<div class="container">
+<!-- 			<div class="row centered">
+				<div class="col-lg-8 col-lg-offset-2">
+				<h1>It Doesn't Take a Rocket <b>Scientist</b></h1>
+				<h2>It Takes a Designer</h2>
+				</div>
+			</div><!-- row --> -->
             <form action="." method="POST">
                 <p id="autocomplete-textboxes"></p>
-                <img src="{{poster_url_1}}" alt="some_text">
+                
                 <input type="submit" name="my-form" value="Find movies we'll both enjoy">
-                <br>
-                <br>
-                <p>{{message}}</p>
+ 
 
-                    <script>
+                     <script>
                         $('#autocomplete-textboxes').html(autocompletetextboxTags)
 
                         function autocompletetextboxTags(){
-                            html=''
+                            html='<div id=left_side style="float:left; width:50%">'
                             html+='<label>Friend 1: What movies do you want to watch?</label>'
                             html+='<input class="movie" type="text" name="u1m1_name" id="movie11" placeholder="Enter a movie title" value="{{u1m1_val}}">'
                             html+='<input class="movie" type="text" name="u1m2_name" id="movie12" placeholder="Enter a movie title" value="{{u1m2_val}}">'
                             html+='<input class="movie" type="text" name="u1m3_name" id="movie13" placeholder="Enter a movie title" value="{{u1m3_val}}">'
                             html+='<input class="movie" type="text" name="u1m4_name" id="movie14" placeholder="Enter a movie title" value="{{u1m4_val}}">'
                             html+='<input class="movie" type="text" name="u1m5_name" id="movie15" placeholder="Enter a movie title" value="{{u1m5_val}}">'
+                            html+='</div>'
+                            html+='<div id=right_side style="float:left; width:50%">'
                             html+='<label>Friend 2: What movies do you want to watch?</label>'
                             html+='<input class="movie" type="text" name="u2m1_name" id="movie21" placeholder="Enter a movie title" value="{{u2m1_val}}">'
                             html+='<input class="movie" type="text" name="u2m2_name" id="movie22" placeholder="Enter a movie title" value="{{u2m2_val}}">'
                             html+='<input class="movie" type="text" name="u2m3_name" id="movie23" placeholder="Enter a movie title" value="{{u2m3_val}}">'
                             html+='<input class="movie" type="text" name="u2m4_name" id="movie24" placeholder="Enter a movie title" value="{{u2m4_val}}">'
                             html+='<input class="movie" type="text" name="u2m5_name" id="movie24" placeholder="Enter a movie title" value="{{u2m5_val}}">'
+                            html+='</div>'
                             return $(html)
                         }
 
@@ -95,14 +98,164 @@
                         });
                    </script>
             </form>
-        </div>
-    </div><!-- /.container -->
+            </form>
+		</div><!-- container -->
+	</div><!-- headerwrap -->
+
+
+	<div class="container w">
+		<div class="row centered">
+			<br><br>
+			<div class="col-lg-4">
+				<i class="fa fa-heart"></i>
+				<h4>DESIGN</h4>
+				<p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even believable.</p>
+			</div><!-- col-lg-4 -->
+
+			<div class="col-lg-4">
+				<i class="fa fa-laptop"></i>
+				<h4>BOOTSTRAP</h4>
+				<p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even believable.</p>
+			</div><!-- col-lg-4 -->
+
+			<div class="col-lg-4">
+				<i class="fa fa-trophy"></i>
+				<h4>SUPPORT</h4>
+				<p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even believable.</p>
+			</div><!-- col-lg-4 -->
+		</div><!-- row -->
+		<br>
+		<br>
+	</div><!-- container -->
+
+
+	<!-- PORTFOLIO SECTION -->
+	<div id="dg">
+		<div class="container">
+			<div class="row centered">
+				<h4>LATEST WORKS</h4>
+				<br>
+				<div class="col-lg-4">
+					<div class="tilt">
+					<a href="#"><img src="static/assets/img/p01.png" alt=""></a>
+					</div>
+				</div>
+
+				<div class="col-lg-4">
+					<div class="tilt">
+					<a href="#"><img src="static/assets/img/p03.png" alt=""></a>
+					</div>
+				</div>
+
+				<div class="col-lg-4">
+					<div class="tilt">
+					<a href="#"><img src="static/assets/img/p02.png" alt=""></a>
+					</div>
+				</div>
+			</div><!-- row -->
+		</div><!-- container -->
+	</div><!-- DG -->
+
+
+	<!-- FEATURE SECTION -->
+	<div class="container wb">
+		<div class="row centered">
+			<br><br>
+			<div class="col-lg-8 col-lg-offset-2">
+				<h4>WE CREATE FIRST CLASS DESIGN</h4>
+				<p>By being true to the brand we represent, we elevate the audiences’ relationship to it. Like becomes love becomes a passion. Passion becomes advocacy. And we see the brand blossom from within, creating a whole story the audience embraces. That’s when the brand can truly flex its muscles.</p>
+			<p><br/><br/></p>
+			</div>
+			<div class="col-lg-2"></div>
+			<div class="col-lg-10 col-lg-offset-1">
+				<img class="img-responsive" src="static/assets/img/munter.png" alt="">
+			</div>
+		</div><!-- row -->
+	</div><!-- container -->
+
+
+	<div id="lg">
+		<div class="container">
+			<div class="row centered">
+				<h4>OUR AWESOME CLIENTS</h4>
+				<div class="col-lg-2 col-lg-offset-1">
+					<img src="static/assets/img/c01.gif" alt="">
+				</div>
+				<div class="col-lg-2">
+					<img src="static/assets/img/c02.gif" alt="">
+				</div>
+				<div class="col-lg-2">
+					<img src="static/assets/img/c03.gif" alt="">
+				</div>
+				<div class="col-lg-2">
+					<img src="static/assets/img/c04.gif" alt="">
+				</div>
+				<div class="col-lg-2">
+					<img src="static/assets/img/c05.gif" alt="">
+				</div>
+			</div><!-- row -->
+		</div><!-- container -->
+	</div><!-- dg -->
+	
+	
+	<div id="r">
+		<div class="container">
+			<div class="row centered">
+				<div class="col-lg-8 col-lg-offset-2">
+					<h4>WE ARE STORYTELLERS. BRANDS ARE OUR SUBJECTS. DESIGN IS OUR VOICE.</h4>
+					<p>We believe ideas come from everyone, everywhere. At BlackTie, everyone within our agency walls is a designer in their own right. And there are a few principles we believe—and we believe everyone should believe—about our design craft. These truths drive us, motivate us, and ultctely help us redefine the power of design.</p>
+				</div>
+			</div><!-- row -->
+		</div><!-- container -->
+	</div><! -- r wrap -->
+	
+	
+	<!-- FOOTER -->
+	<div id="f">
+		<div class="container">
+			<div class="row centered">
+				<a href="#"><i class="fa fa-twitter"></i></a><a href="#"><i class="fa fa-facebook"></i></a><a href="#"><i class="fa fa-dribbble"></i></a>
+		
+			</div><!-- row -->
+		</div><!-- container -->
+	</div><!-- Footer -->
+
+
+	<!-- MODAL FOR CONTACT -->
+	<!-- Modal -->
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	        <h4 class="modal-title" id="myModalLabel">contact us</h4>
+	      </div>
+	      <div class="modal-body">
+		        <div class="row centered">
+		        	<p>We are available 24/7, so don't hesitate to contact us.</p>
+		        	<p>
+		        		Somestreet Ave, 987<br/>
+						London, UK.<br/>
+						+44 8948-4343<br/>
+						hi@blacktie.co
+		        	</p>
+		        	<div id="mapwrap">
+		<iframe height="300" width="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://www.google.es/maps?t=m&amp;ie=UTF8&amp;ll=52.752693,22.791016&amp;spn=67.34552,156.972656&amp;z=2&amp;output=embed"></iframe>
+					</div>	
+		        </div>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-danger" data-dismiss="modal">Save & Go</button>
+	      </div>
+	    </div><!-- /.modal-content -->
+	  </div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
 
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-    <script src="static/dist/js/bootstrap.min.js"></script>
+    <script src="static/assets/js/bootstrap.min.js"></script>
   </body>
 </html>
