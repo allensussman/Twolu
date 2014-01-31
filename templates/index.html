@@ -233,6 +233,8 @@
     <script>
        	var left_count=2;
        	var right_count=2;
+       	var left_count_new=1;
+       	var right_count_new=1;
 
         $('.movie').typeahead({
           name: 'movies',
@@ -249,77 +251,99 @@
         $('#movie24').hide();
 	    $('#movie25').hide();
 
-
-/*    	function addLeft(){
-       		$('#movie2'+left_count).show();
-       		if(left_count<5){
-           		$('#movie2'+left_count).append('<input type="button" value="+" id="button_add_left">')
-				left_count++;
+		function setNumLeftFields(numLeftFields){
+			i=1;
+			while(i<=numLeftFields){
+				$('#movie1'+i).show();
+				i++;
 			}
-		}
-
-    	function addLeftAndRemove(){
-       		addLeft();
-			$(this).remove();
-			$('#button_add_left').click(addLeftAndRemove);
-		}
-
-        $('#button_add_left').click(addLeft);
-
-    	function addRight(){
-       		$('#movie2'+right_count).show();
-       		if(right_count<5){
-           		$('#movie2'+right_count).append('<input type="button" value="+" id="button_add_right">')
-				right_count++;
+			while(i<=5){
+				$('#movie1'+i).hide();
+				i++;	
 			}
-		}
-
-    	function addRightAndRemove(){
-       		addRight();
-			$(this).remove();
-			$('#button_add_right').click(addRightAndRemove);
-		}
-
-        $('#button_add_right').click(addRightAndRemove);
-*/
-    	function addLeft(){
-       		$('#movie1'+left_count).show();
 			$('#button_add_left').remove();
-       		if(left_count<5){
-           		$('#movie1'+left_count).append('<input type="button" value="+" id="button_add_left">')
-				left_count++;
-				$('#button_add_left').click(addLeft);
+			left_count_new=numLeftFields;
+			if(numLeftFields < 5){
+           		$('#movie1'+numLeftFields).append('<input type="button" value="+" id="button_add_left">')
+   		        $('#button_add_left').click(function(){
+        			setNumLeftFields(left_count_new+1);
+    			});
+
 			}
 		}
 
-        $('#button_add_left').click(addLeft);
-
-    	function addRight(){
-       		$('#movie2'+right_count).show();
+		function setNumRightFields(numRightFields){
+			i=1;
+			while(i<=numRightFields){
+				$('#movie2'+i).show();
+				i++;
+			}
+			while(i<=5){
+				$('#movie2'+i).hide();
+				i++;	
+			}
 			$('#button_add_right').remove();
-       		if(right_count<5){
-           		$('#movie2'+right_count).append('<input type="button" value="+" id="button_add_right">')
-				right_count++;
-				$('#button_add_right').click(addRight);
+			right_count_new=numRightFields;
+			if(numRightFields < 5){
+           		$('#movie2'+numRightFields).append('<input type="button" value="+" id="button_add_right">')
+		        $('#button_add_right').click(function(){
+		        	setNumRightFields(right_count_new+1);
+		        });
 			}
 		}
 
-        $('#button_add_right').click(addRight);
+        $('#button_add_left').click(function(){
+        	setNumLeftFields(left_count_new+1);
+        });
+
+        $('#button_add_right').click(function(){
+        	setNumRightFields(right_count_new+1);
+        });
 
         $('#scifi_comedy').click(function(){
-        	while(left_count<=4){
-	        	addLeft();
-	        }
-	        while(right_count<=2){
-	        	addRight();
-	        }
+
+        	setNumRightFields(2);
+        	setNumLeftFields(4);
+
 	        $('#movie11_text').val('Star Trek: Generations (1994)')
 	        $('#movie12_text').val('Stargate (1994)')
 	        $('#movie13_text').val('Star Wars: Episode IV - A New Hope (a.k.a. Star Wars) (1977)')
 	        $('#movie14_text').val('Blade Runner (1982)')
+
 	        $('#movie21_text').val('Happy Gilmore (1996)')
 	        $('#movie22_text').val('Billy Madison (1995)')
         });
+
+        $('#kids_predator').click(function(){
+        	setNumLeftFields(1);
+        	setNumRightFields(1);
+
+ 	        $('#movie11_text').val('Goofy Movie, A (1995)')
+
+	        $('#movie21_text').val('Predator (1987)')
+       });
+
+        $('#comedy_horror').click(function(){
+        	setNumLeftFields(3);
+        	setNumRightFields(1);
+
+ 	        $('#movie11_text').val('Nine Months (1995)')
+	        $('#movie12_text').val('Notting Hill (1999)')
+	        $('#movie13_text').val('Eat Drink Man Woman (Yin shi nan nu) (1994)')
+
+	        $('#movie21_text').val('Texas Chainsaw Massacre, The (1974)')
+       });
+
+        $('#romance_comedy').click(function(){
+        	setNumLeftFields(2);
+        	setNumRightFields(2);
+
+ 	        $('#movie11_text').val('Persuasion (1995)')
+	        $('#movie12_text').val('Leaving Las Vegas (1995)')
+
+	        $('#movie21_text').val('Happy Gilmore (1996)')
+	        $('#movie22_text').val('Billy Madison (1995)')
+       });
     </script>
 
     <!-- Bootstrap core JavaScript
