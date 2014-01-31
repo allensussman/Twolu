@@ -19,9 +19,9 @@
 
     <link href="static/dist/css/typeahead.css" rel="stylesheet">
 
-
     <script src="static/dist/js/jquery.min.js"></script>
     <script src="static/dist/js/typeahead.js"></script>
+
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -56,47 +56,35 @@
 
 	<div id="headerwrap">
 		<div class="container">
-<!-- 			<div class="row centered">
-				<div class="col-lg-8 col-lg-offset-2">
-				<h1>It Doesn't Take a Rocket <b>Scientist</b></h1>
-				<h2>It Takes a Designer</h2>
-				</div>
-			</div><!-- row --> -->
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
             <form action="." method="POST">
-                <p id="autocomplete-textboxes"></p>
-                
-                <input type="submit" name="my-form" value="Find movies we'll both enjoy">
- 
+            	<div id="left_side" style="float:left; width:50%">
+	                <label>Friend 1: What movies do you want to watch?</label>
+	                <div id="movie11"><input class="movie" id="movie11_text" type="text" name="u1m1_name" placeholder="Enter a movie title" value="{{u1m1_val}}"><input type="button" value="+" id="button_add_left"></div>
+	                <div id="movie12"><input class="movie" id="movie12_text" type="text" name="u1m2_name" placeholder="Enter a movie title" value="{{u1m2_val}}"></div>
+	                <div id="movie13"><input class="movie" id="movie13_text" type="text" name="u1m3_name" placeholder="Enter a movie title" value="{{u1m3_val}}"></div>
+	                <div id="movie14"><input class="movie" id="movie14_text" type="text" name="u1m4_name" placeholder="Enter a movie title" value="{{u1m4_val}}"></div>
+	                <div id="movie15"><input class="movie" id="movie15_text" type="text" name="u1m5_name" placeholder="Enter a movie title" value="{{u1m5_val}}"></div>
+	                </div>
+                <div id="right_side" style="float:left; width:50%">
+	                <label>Friend 2: What movies do you want to watch?</label>
+	                <div id="movie21"><input class="movie" id="movie21_text" type="text" name="u2m1_name" placeholder="Enter a movie title" value="{{u2m1_val}}"><input type="button" value="+" id="button_add_right"></div>
+	                <div id="movie22"><input class="movie" id="movie22_text" type="text" name="u2m2_name" placeholder="Enter a movie title" value="{{u1m2_val}}"></div>
+	                <div id="movie23"><input class="movie" id="movie23_text" type="text" name="u2m3_name" placeholder="Enter a movie title" value="{{u2m3_val}}"></div>
+	                <div id="movie24"><input class="movie" id="movie24_text" type="text" name="u2m4_name" placeholder="Enter a movie title" value="{{u2m4_val}}"></div>
+	                <div id="movie25"><input class="movie" id="movie25_text" type="text" name="u2m5_name" placeholder="Enter a movie title" value="{{u2m5_val}}"></div>
+            	</div>
+            	<div class="find_recs_button">
+                	<input type="submit" name="my-form" value="Find movies we'll both enjoy">
+ 				</div>
 
-                     <script>
-                        $('#autocomplete-textboxes').html(autocompletetextboxTags)
 
-                        function autocompletetextboxTags(){
-                            html='<div id=left_side style="float:left; width:50%">'
-                            html+='<label>Friend 1: What movies do you want to watch?</label>'
-                            html+='<input class="movie" type="text" name="u1m1_name" id="movie11" placeholder="Enter a movie title" value="{{u1m1_val}}">'
-                            html+='<input class="movie" type="text" name="u1m2_name" id="movie12" placeholder="Enter a movie title" value="{{u1m2_val}}">'
-                            html+='<input class="movie" type="text" name="u1m3_name" id="movie13" placeholder="Enter a movie title" value="{{u1m3_val}}">'
-                            html+='<input class="movie" type="text" name="u1m4_name" id="movie14" placeholder="Enter a movie title" value="{{u1m4_val}}">'
-                            html+='<input class="movie" type="text" name="u1m5_name" id="movie15" placeholder="Enter a movie title" value="{{u1m5_val}}">'
-                            html+='</div>'
-                            html+='<div id=right_side style="float:left; width:50%">'
-                            html+='<label>Friend 2: What movies do you want to watch?</label>'
-                            html+='<input class="movie" type="text" name="u2m1_name" id="movie21" placeholder="Enter a movie title" value="{{u2m1_val}}">'
-                            html+='<input class="movie" type="text" name="u2m2_name" id="movie22" placeholder="Enter a movie title" value="{{u2m2_val}}">'
-                            html+='<input class="movie" type="text" name="u2m3_name" id="movie23" placeholder="Enter a movie title" value="{{u2m3_val}}">'
-                            html+='<input class="movie" type="text" name="u2m4_name" id="movie24" placeholder="Enter a movie title" value="{{u2m4_val}}">'
-                            html+='<input class="movie" type="text" name="u2m5_name" id="movie24" placeholder="Enter a movie title" value="{{u2m5_val}}">'
-                            html+='</div>'
-                            return $(html)
-                        }
-
-                        $('.movie').typeahead({
-                          name: 'movies',
-                          remote: '/json/movies?q=%QUERY',
-                          limit: 10
-                        });
-                   </script>
             </form>
             </form>
 		</div><!-- container -->
@@ -105,24 +93,14 @@
 
 	<div class="container w">
 		<div class="row centered">
+			<div class="btn-group btn-group-justified">
+			  	<button type="button" class="btn btn-success" id="scifi_comedy" style="width:25%">SCIFI + SILLY COMEDY</button>
+				<button type="button" class="btn btn-primary" id="kids_predator" style="width:25%">KIDS + PREDATOR</button>
+			  	<button type="button" class="btn btn-warning" id="comedy_horror" style="width:25%">ROMANCE/FAMILY COMEDY + TEXAS CHAINSAW MASSACRE</button>
+				<button type="button" class="btn btn-danger" id="romance_comedy" style="width:25%">ROMANCE/DRAMA + SILLY COMEDY</button>
+			</div>
 			<br><br>
-			<div class="col-lg-4">
-				<i class="fa fa-heart"></i>
-				<h4>DESIGN</h4>
-				<p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even believable.</p>
-			</div><!-- col-lg-4 -->
 
-			<div class="col-lg-4">
-				<i class="fa fa-laptop"></i>
-				<h4>BOOTSTRAP</h4>
-				<p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even believable.</p>
-			</div><!-- col-lg-4 -->
-
-			<div class="col-lg-4">
-				<i class="fa fa-trophy"></i>
-				<h4>SUPPORT</h4>
-				<p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even believable.</p>
-			</div><!-- col-lg-4 -->
 		</div><!-- row -->
 		<br>
 		<br>
@@ -252,10 +230,103 @@
 	</div><!-- /.modal -->
 
 
+    <script>
+       	var left_count=2;
+       	var right_count=2;
+
+        $('.movie').typeahead({
+          name: 'movies',
+          remote: '/json/movies?q=%QUERY',
+          limit: 10
+        });
+
+    	$('#movie12').hide();
+    	$('#movie13').hide();
+        $('#movie14').hide();
+        $('#movie15').hide();
+        $('#movie22').hide();
+        $('#movie23').hide();
+        $('#movie24').hide();
+	    $('#movie25').hide();
+
+
+/*    	function addLeft(){
+       		$('#movie2'+left_count).show();
+       		if(left_count<5){
+           		$('#movie2'+left_count).append('<input type="button" value="+" id="button_add_left">')
+				left_count++;
+			}
+		}
+
+    	function addLeftAndRemove(){
+       		addLeft();
+			$(this).remove();
+			$('#button_add_left').click(addLeftAndRemove);
+		}
+
+        $('#button_add_left').click(addLeft);
+
+    	function addRight(){
+       		$('#movie2'+right_count).show();
+       		if(right_count<5){
+           		$('#movie2'+right_count).append('<input type="button" value="+" id="button_add_right">')
+				right_count++;
+			}
+		}
+
+    	function addRightAndRemove(){
+       		addRight();
+			$(this).remove();
+			$('#button_add_right').click(addRightAndRemove);
+		}
+
+        $('#button_add_right').click(addRightAndRemove);
+*/
+    	function addLeft(){
+       		$('#movie1'+left_count).show();
+			$('#button_add_left').remove();
+       		if(left_count<5){
+           		$('#movie1'+left_count).append('<input type="button" value="+" id="button_add_left">')
+				left_count++;
+				$('#button_add_left').click(addLeft);
+			}
+		}
+
+        $('#button_add_left').click(addLeft);
+
+    	function addRight(){
+       		$('#movie2'+right_count).show();
+			$('#button_add_right').remove();
+       		if(right_count<5){
+           		$('#movie2'+right_count).append('<input type="button" value="+" id="button_add_right">')
+				right_count++;
+				$('#button_add_right').click(addRight);
+			}
+		}
+
+        $('#button_add_right').click(addRight);
+
+        $('#scifi_comedy').click(function(){
+        	while(left_count<=4){
+	        	addLeft();
+	        }
+	        while(right_count<=2){
+	        	addRight();
+	        }
+	        $('#movie11_text').val('Star Trek: Generations (1994)')
+	        $('#movie12_text').val('Stargate (1994)')
+	        $('#movie13_text').val('Star Wars: Episode IV - A New Hope (a.k.a. Star Wars) (1977)')
+	        $('#movie14_text').val('Blade Runner (1982)')
+	        $('#movie21_text').val('Happy Gilmore (1996)')
+	        $('#movie22_text').val('Billy Madison (1995)')
+        });
+    </script>
+
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
     <script src="static/assets/js/bootstrap.min.js"></script>
+
   </body>
 </html>

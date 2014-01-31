@@ -139,7 +139,7 @@ a:after {
 	text-align:center;
 	background-attachment: relative;
 	background-position: center center;
-	min-height: 500px;
+	min-height: 600px;
 	width: 100%;
 	
     -webkit-background-size: 100%;
@@ -167,6 +167,13 @@ a:after {
 	font-weight: 700;
 	letter-spacing: 2px;
 	text-transform: uppercase;
+}
+
+#headerwrap div.find_recs_button {
+    position: absolute;
+    top: 500px;
+    left: 50%;
+    margin-left: -100px;
 }
 
 /* Dark Grey Wrap */
