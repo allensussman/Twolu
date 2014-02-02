@@ -81,8 +81,8 @@
 	                <div id="movie25"><input class="movie" id="movie25_text" type="text" name="u2m5_name" placeholder="Enter a movie title" value="{{u2m5_val}}"></div>
             	</div>
             	<div class="find_recs_button">
-                	<input type="submit" name="my-form" value="Find movies we'll both enjoy">
- 				</div>
+            		<input class='btn btn-primary' type='submit' value="Find movies we'll both like!">
+            	</div>
 
 
             </form>
@@ -94,10 +94,10 @@
 	<div class="container w">
 		<div class="row centered">
 			<div class="btn-group btn-group-justified">
-			  	<button type="button" class="btn btn-success" id="scifi_comedy" style="width:25%">SCIFI + SILLY COMEDY</button>
-				<button type="button" class="btn btn-primary" id="kids_predator" style="width:25%">KIDS + PREDATOR</button>
-			  	<button type="button" class="btn btn-warning" id="comedy_horror" style="width:25%">ROMANCE/FAMILY COMEDY + TEXAS CHAINSAW MASSACRE</button>
-				<button type="button" class="btn btn-danger" id="romance_comedy" style="width:25%">ROMANCE/DRAMA + SILLY COMEDY</button>
+			  	<button type="button" class="btn btn-success" id="scifi_comedy" style="width:25%; height:100px; white-space: normal">SCIFI + SILLY COMEDY</button>
+				<button type="button" class="btn btn-primary" id="kids_predator" style="width:25%; height:100px; white-space: normal">KIDS + PREDATOR</button>
+			  	<button type="button" class="btn btn-warning" id="comedy_horror" style="width:25%; height:100px; white-space: normal">ROMANCE/FAMILY COMEDY + TEXAS CHAINSAW MASSACRE</button>
+				<button type="button" class="btn btn-danger" id="romance_comedy" style="width:25%; height:100px; white-space: normal">ROMANCE/DRAMA + SILLY COMEDY</button>
 			</div>
 			<br><br>
 
@@ -309,9 +309,13 @@
 	        $('#movie12_text').val('Stargate (1994)')
 	        $('#movie13_text').val('Star Wars: Episode IV - A New Hope (a.k.a. Star Wars) (1977)')
 	        $('#movie14_text').val('Blade Runner (1982)')
+	        $('#movie15_text').val('')
 
 	        $('#movie21_text').val('Happy Gilmore (1996)')
 	        $('#movie22_text').val('Billy Madison (1995)')
+	        $('#movie23_text').val('')
+	        $('#movie24_text').val('')
+	        $('#movie25_text').val('')
         });
 
         $('#kids_predator').click(function(){
@@ -319,8 +323,16 @@
         	setNumRightFields(1);
 
  	        $('#movie11_text').val('Goofy Movie, A (1995)')
+	        $('#movie12_text').val('')
+	        $('#movie13_text').val('')
+	        $('#movie14_text').val('')
+	        $('#movie15_text').val('')
 
 	        $('#movie21_text').val('Predator (1987)')
+	        $('#movie22_text').val('')
+	        $('#movie23_text').val('')
+	        $('#movie24_text').val('')
+	        $('#movie25_text').val('')
        });
 
         $('#comedy_horror').click(function(){
@@ -330,9 +342,15 @@
  	        $('#movie11_text').val('Nine Months (1995)')
 	        $('#movie12_text').val('Notting Hill (1999)')
 	        $('#movie13_text').val('Eat Drink Man Woman (Yin shi nan nu) (1994)')
+	        $('#movie14_text').val('')
+	        $('#movie15_text').val('')
 
 	        $('#movie21_text').val('Texas Chainsaw Massacre, The (1974)')
-       });
+ 	        $('#movie22_text').val('')
+	        $('#movie23_text').val('')
+	        $('#movie24_text').val('')
+	        $('#movie25_text').val('')
+      });
 
         $('#romance_comedy').click(function(){
         	setNumLeftFields(2);
@@ -340,9 +358,15 @@
 
  	        $('#movie11_text').val('Persuasion (1995)')
 	        $('#movie12_text').val('Leaving Las Vegas (1995)')
+	        $('#movie13_text').val('')
+	        $('#movie14_text').val('')
+	        $('#movie15_text').val('')
 
 	        $('#movie21_text').val('Happy Gilmore (1996)')
 	        $('#movie22_text').val('Billy Madison (1995)')
+	        $('#movie23_text').val('')
+	        $('#movie24_text').val('')
+	        $('#movie25_text').val('')
        });
     </script>
 
