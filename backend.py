@@ -6,6 +6,41 @@ import numpy as np
 import pandas as pd
 from DbAccess import DbAccess
 from rottentomatoes import RT
+from time import time
+
+def createMovieIDTitleDataFrame(database):
+	""" Returns pandas DataFrame of movie IDs and titles (in various forms) from database
+	"""
+	# Create a connection and a cursor object
+	db = DbAccess(database,usr='root')
+
+	#-------------------------------------------------------GET DATA FROM SQL-----------------------------------------------------------#
+	# get movies
+	db.cursor.execute(
+	    '''
+	    SELECT MovieID,Title
+	    FROM movies
+	    ''')
+
+	data = db.cursor.fetchall()
+
+	moviesDf=pd.DataFrame.from_records(data,index='MovieID',columns=['MovieID','TitleWithYear'])
+
+	#-----------------------------------------------------MASSAGE MOVIE DATA------------------------------------------------------------#
+	#remove year and alternate spellings
+	moviesDf['TitleArticleAtEnd']=moviesDf['TitleWithYear'].apply(lambda x: x.split(' (')[0])
+
+	#make column where articles (a, an, the...) are at beginning
+	moviesDf['Title']=moviesDf['TitleArticleAtEnd'].apply(moveArticle)
+
+	#make column with initial articles removed
+	moviesDf['TitleNoArticle']=moviesDf['TitleArticleAtEnd'].apply(removeArticle)
+
+	# make everything lower case so I can do case insensitive search
+	moviesDf['TitleLower']=moviesDf['Title'].apply(lowerCase)
+	moviesDf['TitleNoArticleLower']=moviesDf['TitleNoArticle'].apply(lowerCase)
+
+	return moviesDf
 
 #move article in movie title from end to beginning
 def moveArticle(x):
@@ -50,70 +85,46 @@ def getMovieID(moviesDf,movieTitle):
 		print '%s not found' % movieTitle
 	return movie_info.index[0]
 
-def getPosterUrl(movieTitle):
-	rt=RT()
-	return rt.search(movieTitle)[0]['posters']['original']
+def getSimilarityMatrix(svd_model_file):
+	""" Returns similarity matrix from svd_model_file
+	"""
+	#Import SVD from file
+	svd=SVD()
+	svd.load_model(svd_model_file)
 
-def backend(movies_1,movies_2):
-	""" Returns recommended movies for two people
-	movies_1: list (!) of movies person 1 wants to watch
-	movies_2: list (!) of movies person 2 wants to watch
+	return svd.get_matrix_similarity()
+
+def getRecMovieIDs(InputIDs1,InputIDs2,sims):
+	"""
+	Returns IDs of recommended movies
+	InputIDs1: list (!) of IDs of movies user 1 wants to watch
+	InputIDs2: list (!) of IDs of movies user 2 wants to watch
+	sims: movie similarity matrix
 	"""
 
-	# Create a connection and a cursor object
-	db = DbAccess('twolu',usr='root')
+	# Take out any input movieIDs that aren't in the similarity matrix.
+	# Hopefully this doesn't make things really slow.
+	# If at least one of the users has input no movies that are in the similarity matrix,
+	# return an empty list
+	allMovieIDsInSim=sims.get().get_row_labels()
+	InputIDs1=list(set.intersection(set(InputIDs1),allMovieIDsInSim))
+	InputIDs2=list(set.intersection(set(InputIDs2),allMovieIDsInSim))
 
-	#-------------------------------------------------GET DATA FROM SQL------------------------------------------------------#
-	# get movies
-	db.cursor.execute(
-	    '''
-	    SELECT MovieID,Title
-	    FROM movies
-	    ''')
+	if not InputIDs1 or not InputIDs2:
+		return []
 
-	data = db.cursor.fetchall()
+	numInput1s=len(InputIDs1)
+	numInput2s=len(InputIDs2)
 
-	moviesDf=pd.DataFrame.from_records(data,index='MovieID',columns=['MovieID','TitleWithYear'])
+	InputIDs=InputIDs1+InputIDs2
 
-	#-----------------------------------------------------MASSAGE MOVIE DATA------------------------------------------------------------#
-	#remove year and alternate spellings
-	moviesDf['TitleArticleAtEnd']=moviesDf['TitleWithYear'].apply(lambda x: x.split(' (')[0])
+	numInputs=len(InputIDs)
 
-	#make column where articles (a, an, the...) are at beginning
-	moviesDf['Title']=moviesDf['TitleArticleAtEnd'].apply(moveArticle)
 
-	#make column with initial articles removed
-	moviesDf['TitleNoArticle']=moviesDf['TitleArticleAtEnd'].apply(removeArticle)
+	sims_to_inputs_1=[sims.get_row(i) for i in InputIDs1]
+	sims_to_inputs_2=[sims.get_row(i) for i in InputIDs2]
 
-	# make everything lower case so I can do case insensitive search
-	moviesDf['TitleLower']=moviesDf['Title'].apply(lowerCase)
-	moviesDf['TitleNoArticleLower']=moviesDf['TitleNoArticle'].apply(lowerCase)
-
-	#-----------------------------------------FIND MOVIEIDS OF INPUT MOVIES------------------------------------------------------------#
-
-	# TO DO: Fix handling of not finding a movie
-	ITEMIDS1=[getMovieID(moviesDf,movie) for movie in movies_1]
-	ITEMIDS2=[getMovieID(moviesDf,movie) for movie in movies_2]
-
-	#-----------------------------------------READ IN SVD AND GET SIMILARITIES-----------------------------------------------------------#	
-	#Import SVD from file
-	svd2=SVD()
-	svd2.load_model('svd-10M-k100') #calculated on 10M rating database, with parameter k=100
-
-	sims=svd2.get_matrix_similarity()
-
-	#------------------------------------------------GET RECOMMENDED MOVIEIDS--------------------------------------------------------------#
-	numInput1s=len(ITEMIDS1)
-	numInput2s=len(ITEMIDS2)
-
-	ITEMIDS=ITEMIDS1+ITEMIDS2
-
-	numInputs=len(ITEMIDS)
-
-	sims_to_inputs_1=[sims.get_row(i) for i in ITEMIDS1]
-	sims_to_inputs_2=[sims.get_row(i) for i in ITEMIDS2]
-
-	sims_to_inputs=[sims.get_row(i) for i in ITEMIDS]
+	sims_to_inputs=[sims.get_row(i) for i in InputIDs]
 
 	avg_sims_1=sum(sims_to_inputs_1)/numInput1s
 	avg_sims_2=sum(sims_to_inputs_2)/numInput2s
@@ -125,17 +136,47 @@ def backend(movies_1,movies_2):
 
 	var_sims=sum([abs(i-avg_sims) for i in sims_to_inputs])/numInputs
 
-	recs_tuples=(avg_sims-0.25*var_sims-0.25*diff_sims).top_items(5,lambda x: ITEMIDS.count(x)==0)
+	recs_tuples=(avg_sims-0.25*var_sims-0.25*diff_sims).top_items(5,lambda x: InputIDs.count(x)==0)
 
-	recsIDs=[i[0] for i in recs_tuples]
+	return [i[0] for i in recs_tuples]
+
+def getPosterUrl(movieTitle,rt):
+	return rt.search(movieTitle)[0]['posters']['original']
+
+def backend(movieTitles1,movieTitles2,database,svd_model_file):
+	""" Returns recommended movies for two people
+	movieTitles1: list (!) of movies person 1 wants to watch
+	movieTitles2: list (!) of movies person 2 wants to watch
+	numRatings: number of ratings in original database.  Must be '10M','1M', or '100K'
+	"""
+
+	#-----------------------------------------CREATE MOVIE ID AND TITLES DATAFRAME-----------------------------------------------------------#
+	moviesDf=createMovieIDTitleDataFrame(database)
+
+	#-----------------------------------------FIND MOVIEIDS OF INPUT MOVIES------------------------------------------------------------#
+	# TO DO: Fix handling of not finding a movie
+	ITEMIDS1=[getMovieID(moviesDf,movie) for movie in movieTitles1]
+	ITEMIDS2=[getMovieID(moviesDf,movie) for movie in movieTitles2]
+
+	#-------------------------------------------------GET SIMILARITIES-----------------------------------------------------------------#	
+	sims=getSimilarityMatrix(svd_model_file)
+
+	#------------------------------------------------GET RECOMMENDED MOVIEIDS--------------------------------------------------------------#
+	recsIDs = getRecMovieIDs(ITEMIDS1,ITEMIDS2,sims)
+
 	#------------------------------------------------CONVERT TO TITLES--------------------------------------------------------------#
 	recTitles=moviesDf.Title.loc[recsIDs].tolist()
 
 	#------------------------------------------------GET POSTER URLS--------------------------------------------------------------#
-	posterUrls=[getPosterUrl(title) for title in recTitles]
+	rt=RT()
+	# posterUrls=[getPosterUrl(title) for title in recTitles]
+
+	recMoviesInfo=[rt.search(title)[0] for title in recTitles]
+	posterUrls=[movie['posters']['original'] for movie in recMoviesInfo]
+	movieUrls=[movie['links']['alternate'] for movie in recMoviesInfo]
 
 	#------------------------------------------------RETURN--------------------------------------------------------------#
-	return zip(recTitles,posterUrls)
+	return zip(recTitles,posterUrls,movieUrls)
 
 def main():
 
@@ -145,8 +186,10 @@ def main():
 	# ITEMIDS2=[1240]
 	movies_1=['Toy Story','Aladdin']
 	movies_2=['Terminator','Aliens']
+	database='twolu'
+	svd_model_file='svd-10M-k100'
 
-	print backend(movies_1,movies_2)
+	print backend(movies_1,movies_2,database,svd_model_file)
 
 if __name__ == '__main__':
 	main()
