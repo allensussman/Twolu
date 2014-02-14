@@ -1,3 +1,5 @@
+# simple class for connecting to a MySQL database
+
 import mysql.connector
 from mysql.connector import errorcode
 

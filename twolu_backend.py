@@ -1,12 +1,31 @@
-	# from code import interact; interact(local=locals())
-
+#	from code import interact; interact(local=locals())  # for interactive debugging
 
 from recsys.algorithm.factorize import SVD
-import numpy as np
 import pandas as pd
 from DbAccess import DbAccess
 from rottentomatoes import RT
 from time import time
+
+
+# This function is used for autocompletion.  See index.html
+def getAutocompletingMovies(database):
+    """Return list of movies where first letters match query."""
+
+    db = DbAccess(database,usr='root')
+
+    q = request.args.get('q')
+
+    # This is my query to find movies matching query
+    db.cursor.execute(("SELECT Title FROM movies WHERE Title LIKE '{0}%' LIMIT 10").format(q))
+
+    data = db.cursor.fetchall()
+
+    # Matching movies are in a list
+    movies = [title[0] for title in data]
+
+    # Python list is converted to JSON string
+    return json.dumps(movies)
+
 
 def createMovieIDTitleDataFrame(database):
 	""" Returns pandas DataFrame of movie IDs and titles (in various forms) from database
@@ -83,7 +102,7 @@ def getMovieID(moviesDf,movieTitle):
 	movie_info=moviesDf[(moviesDf['TitleLower']==movie_lower) | (moviesDf['TitleNoArticleLower']==movie_lower) | (moviesDf['TitleWithYear']==movieTitle)]
 	if movie_info.empty:
 		print '%s not found' % movieTitle
-	return movie_info.index[0]
+	return movie_info.index[0] #TO DO: returns first movie that matches. but this is not always the right one.  Fix this.
 
 def getSimilarityMatrix(svd_model_file):
 	""" Returns similarity matrix from svd_model_file
@@ -101,17 +120,6 @@ def getRecMovieIDs(InputIDs1,InputIDs2,sims):
 	InputIDs2: list (!) of IDs of movies user 2 wants to watch
 	sims: movie similarity matrix
 	"""
-
-	# Take out any input movieIDs that aren't in the similarity matrix.
-	# Hopefully this doesn't make things really slow.
-	# If at least one of the users has input no movies that are in the similarity matrix,
-	# return an empty list
-	allMovieIDsInSim=sims.get().get_row_labels()
-	InputIDs1=list(set.intersection(set(InputIDs1),allMovieIDsInSim))
-	InputIDs2=list(set.intersection(set(InputIDs2),allMovieIDsInSim))
-
-	if not InputIDs1 or not InputIDs2:
-		return []
 
 	numInput1s=len(InputIDs1)
 	numInput2s=len(InputIDs2)
@@ -134,9 +142,12 @@ def getRecMovieIDs(InputIDs1,InputIDs2,sims):
 
 	diff_sims=abs(avg_sims_1-avg_sims_2)/2
 
+	# this is sort of like variance in similarities to the inputs
 	var_sims=sum([abs(i-avg_sims) for i in sims_to_inputs])/numInputs
 
-	recs_tuples=(avg_sims-0.25*var_sims-0.25*diff_sims).top_items(5,lambda x: InputIDs.count(x)==0)
+	# (avg_sim-0.25*var_sim-0.25*diff_sims) is my proxy for how good of a mutual recommendation a movie is
+	# get the 5 items which maximize this, and are not one of the input movies 
+	recs_tuples=(avg_sims-0.25*var_sims-0.25*diff_sims).top_items(5,lambda x: InputIDs.count(x)==0) 
 
 	return [i[0] for i in recs_tuples]
 
@@ -147,7 +158,6 @@ def backend(movieTitles1,movieTitles2,database,svd_model_file):
 	""" Returns recommended movies for two people
 	movieTitles1: list (!) of movies person 1 wants to watch
 	movieTitles2: list (!) of movies person 2 wants to watch
-	numRatings: number of ratings in original database.  Must be '10M','1M', or '100K'
 	"""
 
 	#-----------------------------------------CREATE MOVIE ID AND TITLES DATAFRAME-----------------------------------------------------------#
@@ -169,21 +179,16 @@ def backend(movieTitles1,movieTitles2,database,svd_model_file):
 
 	#------------------------------------------------GET POSTER URLS--------------------------------------------------------------#
 	rt=RT()
-	# posterUrls=[getPosterUrl(title) for title in recTitles]
 
 	recMoviesInfo=[rt.search(title)[0] for title in recTitles]
 	posterUrls=[movie['posters']['original'] for movie in recMoviesInfo]
 	movieUrls=[movie['links']['alternate'] for movie in recMoviesInfo]
-
+	
 	#------------------------------------------------RETURN--------------------------------------------------------------#
+
 	return zip(recTitles,posterUrls,movieUrls)
 
 def main():
-
-	# ITEMIDS1=[1,588,364] #Toy Story,Aladdin,Lion King
-	# ITEMIDS2=[1240,589,1200] #Terminator,T2,Aliens
-	# ITEMIDS1=[1]
-	# ITEMIDS2=[1240]
 	movies_1=['Toy Story','Aladdin']
 	movies_2=['Terminator','Aliens']
 	database='twolu'

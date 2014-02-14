@@ -105,6 +105,7 @@
 	</div><!-- container -->
 
     <script>
+    	// google analytics snippet
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
@@ -113,17 +114,30 @@
   ga('create', 'UA-47880312-1', 'two-lu.com');
   ga('send', 'pageview');
 
-       	var left_count=2;
-       	var right_count=2;
-       	var left_count_new=1;
-       	var right_count_new=1;
-
+       	// specification for autocompletion.  See frontend.get_autocompleting_movies
         $('.movie').typeahead({
           name: 'movies',
           remote: '/json/movies?q=%QUERY',
           limit: 10
         });
 
+        //------------define functionality of plus button---------------------//
+        // The plus button adds another text box and moves the plus button down,
+        // unless there are 4 text boxes initially, in which case it removes the 
+        // plus button.
+        // The idea is that there are five text boxes for each user, but
+        // initially only one is showing for each user.  On the other hand,
+        // there is only ever one plus button per user.  When the plus button is
+        // pressed, another text box shows itself, and the plus button is 
+        // removed and a new one added (unless there were four text boxes, then
+       	// no new button is added.)
+
+		// These keep track of the current number of text boxes open on the left
+		// and right.  Start with only one text box showing per user.
+       	var left_count=1;
+       	var right_count=1;
+
+       	// start with only one text box showing per user
     	$('#movie12').hide();
     	$('#movie13').hide();
         $('#movie14').hide();
@@ -133,55 +147,77 @@
         $('#movie24').hide();
 	    $('#movie25').hide();
 
+	    // Sets the number of text boxes showing for the left user to 
+	    // numLeftFields.
 		function setNumLeftFields(numLeftFields){
 			i=1;
+			// show numLeftFields text boxes
 			while(i<=numLeftFields){
 				$('#movie1'+i).show();
 				i++;
 			}
+			// hide the other ones
 			while(i<=5){
 				$('#movie1'+i).hide();
 				i++;	
 			}
+			// remove the button
 			$('#button_add_left').remove();
-			left_count_new=numLeftFields;
+
+			// set left_count
+			left_count=numLeftFields;
+
+			// if there are less than 5 text boxes, add another button
+			// that will make another text box when pressed
 			if(numLeftFields < 5){
            		$('#movie1'+numLeftFields).append('<input type="button" value="+" id="button_add_left">')
    		        $('#button_add_left').click(function(){
-        			setNumLeftFields(left_count_new+1);
+        			setNumLeftFields(left_count+1);
     			});
 
 			}
 		}
 
+	    // Sets the number of text boxes showing for the left user to 
+	    // numLeftFields.
 		function setNumRightFields(numRightFields){
 			i=1;
+			// show numRightFields text boxes
 			while(i<=numRightFields){
 				$('#movie2'+i).show();
 				i++;
 			}
+			// hide the other ones
 			while(i<=5){
 				$('#movie2'+i).hide();
 				i++;	
 			}
+			// remove the button
 			$('#button_add_right').remove();
-			right_count_new=numRightFields;
+
+			// set right_count
+			right_count=numRightFields;
+
+			// if there are less than 5 text boxes, add another button
+			// that will make another text box when pressed			
 			if(numRightFields < 5){
            		$('#movie2'+numRightFields).append('<input type="button" value="+" id="button_add_right">')
 		        $('#button_add_right').click(function(){
-		        	setNumRightFields(right_count_new+1);
+		        	setNumRightFields(right_count+1);
 		        });
 			}
 		}
 
+		// Start with buttons that will create add another text box when pressed
         $('#button_add_left').click(function(){
-        	setNumLeftFields(left_count_new+1);
+        	setNumLeftFields(left_count+1);
         });
 
         $('#button_add_right').click(function(){
-        	setNumRightFields(right_count_new+1);
+        	setNumRightFields(right_count+1);
         });
 
+        //-------------specify what all the premade searches do---------------//
         $('#scifi_comedy').click(function(){
 
         	setNumRightFields(2);
