@@ -1,30 +1,10 @@
-#	from code import interact; interact(local=locals())  # for interactive debugging
+# Finds the recommendations for two people who want to watch two sets of movies.  Also finds the rotten tomatoes URLs for the posters and movie info.
 
 from recsys.algorithm.factorize import SVD
 import pandas as pd
 from DbAccess import DbAccess
 from rottentomatoes import RT
 from time import time
-
-
-# This function is used for autocompletion.  See index.html
-def getAutocompletingMovies(database):
-    """Return list of movies where first letters match query."""
-
-    db = DbAccess(database,usr='root')
-
-    q = request.args.get('q')
-
-    # This is my query to find movies matching query
-    db.cursor.execute(("SELECT Title FROM movies WHERE Title LIKE '{0}%' LIMIT 10").format(q))
-
-    data = db.cursor.fetchall()
-
-    # Matching movies are in a list
-    movies = [title[0] for title in data]
-
-    # Python list is converted to JSON string
-    return json.dumps(movies)
 
 
 def createMovieIDTitleDataFrame(database):
