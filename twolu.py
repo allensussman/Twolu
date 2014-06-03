@@ -1,4 +1,10 @@
-#   from code import interact; interact(local=locals())  # for interactive debugging
+# Flask front-end
+# Defines the behavior when:
+#   - the home and slides pages are accessed,
+#   - the button which computes recommendations is pressed
+# 
+# Also get_autocompleting_movies() returns movies which autocomplete a string.  This is used for the autcomplete drop down box.
+
 
 from flask import Flask
 from flask import request
